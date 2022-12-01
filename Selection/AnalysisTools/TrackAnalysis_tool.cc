@@ -144,6 +144,7 @@ private:
 
   std::vector<float> _trk_bragg_p_v;
   std::vector<float> _trk_bragg_mu_v;
+  std::vector<float> _trk_bragg_pion_v;
   std::vector<float> _trk_bragg_mip_v;
   std::vector<float> _trk_pid_chipr_v;
   std::vector<float> _trk_pid_chika_v;
@@ -153,6 +154,7 @@ private:
 
   std::vector<float> _trk_bragg_p_u_v;
   std::vector<float> _trk_bragg_mu_u_v;
+  std::vector<float> _trk_bragg_pion_u_v;
   std::vector<float> _trk_bragg_mip_u_v;
   std::vector<float> _trk_pid_chipr_u_v;
   std::vector<float> _trk_pid_chika_u_v;
@@ -162,6 +164,7 @@ private:
 
   std::vector<float> _trk_bragg_p_v_v;
   std::vector<float> _trk_bragg_mu_v_v;
+  std::vector<float> _trk_bragg_pion_v_v;
   std::vector<float> _trk_bragg_mip_v_v;
   std::vector<float> _trk_pid_chipr_v_v;
   std::vector<float> _trk_pid_chika_v_v;
@@ -183,6 +186,17 @@ private:
   std::vector<float> _trk_calo_energy_u_v;
   std::vector<float> _trk_calo_energy_v_v;
   std::vector<float> _trk_calo_energy_y_v;
+
+  std::vector<int> _trk_nhits_u_v;
+  std::vector<int> _trk_nhits_v_v;
+  std::vector<int> _trk_nhits_y_v;
+
+  std::vector<float> _trk_trunk_dEdx_u_v;
+  std::vector<float> _trk_trunk_dEdx_v_v;
+  std::vector<float> _trk_trunk_dEdx_y_v;
+
+  std::vector<float> _trk_avg_deflection_mean_v;
+  std::vector<float> _trk_avg_deflection_stdev_v;
 };
 
 //----------------------------------------------------------------------------
@@ -318,6 +332,9 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       float bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
                                 searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
 
+      float bragg_pion = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 211, 2),
+                                  searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 211, 2));      
+
       float bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
 
       float pidchipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 2);
@@ -329,6 +346,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
       _trk_bragg_p_v.push_back(bragg_p);
       _trk_bragg_mu_v.push_back(bragg_mu);
+      _trk_bragg_pion_v.push_back(bragg_pion);
       _trk_bragg_mip_v.push_back(bragg_mip);
       _trk_pid_chipr_v.push_back(pidchipr);
       _trk_pid_chimu_v.push_back(pidchimu);
@@ -343,6 +361,9 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       float bragg_mu_u = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 0),
                                   searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 0));
 
+      float bragg_pion_u = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 211, 0),
+                                    searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 211, 0));
+
       float bragg_mip_u = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 0);
 
       float pidchipr_u = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 0);
@@ -354,6 +375,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
       _trk_bragg_p_u_v.push_back(bragg_p_u);
       _trk_bragg_mu_u_v.push_back(bragg_mu_u);
+      _trk_bragg_pion_u_v.push_back(bragg_pion_u);
       _trk_bragg_mip_u_v.push_back(bragg_mip_u);
       _trk_pid_chipr_u_v.push_back(pidchipr_u);
       _trk_pid_chimu_u_v.push_back(pidchimu_u);
@@ -368,6 +390,9 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       float bragg_mu_v = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 1),
                                   searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 1));
 
+      float bragg_pion_v = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 211, 1),
+                                    searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 211, 1));
+
       float bragg_mip_v = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 1);
 
       float pidchipr_v = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 1);
@@ -379,6 +404,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
       _trk_bragg_p_v_v.push_back(bragg_p_v);
       _trk_bragg_mu_v_v.push_back(bragg_mu_v);
+      _trk_bragg_pion_v_v.push_back(bragg_pion_v);
       _trk_bragg_mip_v_v.push_back(bragg_mip_v);
       _trk_pid_chipr_v_v.push_back(pidchipr_v);
       _trk_pid_chimu_v_v.push_back(pidchimu_v);
@@ -495,6 +521,144 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         _trk_llr_pid_v.back() += llr_pid;
       }
       _trk_llr_pid_score_v.back() = atan(_trk_llr_pid_v.back() / 100.) * 2 / 3.14159266;
+
+      // track first third dEdx
+      _trk_nhits_u_v.push_back(0);
+      _trk_nhits_v_v.push_back(0);
+      _trk_nhits_y_v.push_back(0);
+      _trk_trunk_dEdx_u_v.push_back(9999);
+      _trk_trunk_dEdx_v_v.push_back(9999);
+      _trk_trunk_dEdx_y_v.push_back(9999);
+
+      for (auto const &calo : calo_v) {
+
+        auto plane = calo->PlaneID().Plane;
+
+        auto trk_nhits = calo->dEdx().size();
+        auto trk_dedx_values = calo->dEdx();
+
+        // initial offset of 3 hits
+        int firstHitIdx = trk_nhits - 3 - 1;
+
+        // find max hit corresponding to first third of track hits
+        int lastHitIdx = trk_nhits - (int)(trk_nhits/3) - 1; 
+
+        // check at least 5 hits remain, otherwise set as invalid for this track
+        if (firstHitIdx - lastHitIdx < 5) {
+          if (plane == 0) {
+            _trk_nhits_u_v.back() = trk_nhits;
+            _trk_trunk_dEdx_u_v.back() = 9999;
+          }
+          else if (plane == 1) {
+            _trk_nhits_v_v.back() = trk_nhits;
+            _trk_trunk_dEdx_v_v.back() = 9999;
+          }
+          else if (plane == 2) {
+            _trk_nhits_y_v.back() = trk_nhits;
+            _trk_trunk_dEdx_y_v.back() = 9999;
+          }
+        }
+        else {
+          // loop through hits extracting relevant dE/dx values
+          std::vector<float> trk_trunk_dEdx_values;
+          trk_trunk_dEdx_values.reserve(firstHitIdx - lastHitIdx); 
+
+          for (int i = trk_nhits - 1; i >= 0; i--) {
+
+            // skip first part of track
+            if (i > firstHitIdx) continue;
+    
+            trk_trunk_dEdx_values.push_back(trk_dedx_values[i]);
+
+            // skip last part of track
+            if (i < lastHitIdx) break;  
+          }
+
+          // calculate mean, median and standard deviation
+          // median
+          float median;
+          std::sort(trk_trunk_dEdx_values.begin(), trk_trunk_dEdx_values.end());
+          if (trk_trunk_dEdx_values.size() % 2 == 0) median = 0.5 * (trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2 - 1] + trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2]);
+          else median = trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2];
+  
+          // mean
+          double sum = std::accumulate(std::begin(trk_trunk_dEdx_values), std::end(trk_trunk_dEdx_values), 0.0);
+          double m =  sum / trk_trunk_dEdx_values.size();
+          // standard deviation
+          double accum = 0.0;
+          std::for_each(std::begin(trk_trunk_dEdx_values), std::end(trk_trunk_dEdx_values), [&](const double d) {accum += (d - m) * (d - m);});
+          double stdev = sqrt(accum / (trk_trunk_dEdx_values.size()-1));
+
+          // create trimmed dE/dx vector,  remove any dE/dx greater than 1 standard deviation above the median 
+          std::vector<float> trk_trunk_dEdx_values_trimmed;
+          trk_trunk_dEdx_values_trimmed.reserve(firstHitIdx - lastHitIdx);
+          for (unsigned int i = 0; i < trk_trunk_dEdx_values.size(); i++) {
+            if (trk_trunk_dEdx_values[i] <= median + stdev) trk_trunk_dEdx_values_trimmed.push_back(trk_trunk_dEdx_values[i]);
+          }
+
+          // calculate mean of trimmed dE/dx vector
+          double sum_trimmed = std::accumulate(std::begin(trk_trunk_dEdx_values_trimmed), std::end(trk_trunk_dEdx_values_trimmed), 0.0);
+          double trk_dEdx_trunk =  sum_trimmed / trk_trunk_dEdx_values_trimmed.size();
+
+          // save
+          if (plane == 0) {
+            _trk_nhits_u_v.back() = trk_nhits;
+            _trk_trunk_dEdx_u_v.back() = trk_dEdx_trunk;
+          }
+          else if (plane == 1) {
+            _trk_nhits_v_v.back() = trk_nhits;
+            _trk_trunk_dEdx_v_v.back() = trk_dEdx_trunk;
+          }
+          else if (plane == 2) {
+            _trk_nhits_y_v.back() = trk_nhits;
+            _trk_trunk_dEdx_y_v.back() = trk_dEdx_trunk;
+          }
+        }        
+      }
+
+      // average of deflections along track ("wiggliness")
+      // get track valid points
+      std::vector<size_t> validPoints;
+      auto firstValidPoint = trk->FirstValidPoint();
+      validPoints.push_back(firstValidPoint);
+      auto nextValidPoint = trk->NextValidPoint(firstValidPoint + 1);
+      while (nextValidPoint != recob::TrackTrajectory::InvalidIndex)
+      {
+          validPoints.push_back(nextValidPoint);
+          nextValidPoint = trk->NextValidPoint(nextValidPoint + 1);
+      }
+      // determine average deflection between sequential valid points
+      if (validPoints.size() < 3) {
+        _trk_avg_deflection_mean_v.push_back(0);
+        _trk_avg_deflection_stdev_v.push_back(0);
+      }
+      else {
+        std::vector<float> thetaVector;
+        float thetaSum = 0.f;
+        for (unsigned int i = 1; i < validPoints.size(); ++i) {
+          auto dir = trk->DirectionAtPoint(validPoints.at(i));
+          auto dirPrev = trk->DirectionAtPoint(validPoints.at(i - 1));
+
+          // Bind between -1 and 1 at floating precision to avoid issues with cast from double
+          auto cosTheta = std::min(1.f, std::max(-1.f, static_cast<float>(dir.Dot(dirPrev))));
+          auto theta = std::acos(cosTheta);
+
+          thetaSum += theta;
+          thetaVector.push_back(theta);
+        }
+
+        float thetaMean = thetaSum / static_cast<float>(thetaVector.size());
+
+        float thetaDiffSum = 0.f;
+        for (const auto &theta : thetaVector) {
+          thetaDiffSum += std::pow(theta - thetaMean, 2);
+        }
+
+        auto variance = thetaDiffSum / static_cast<float>(thetaVector.size() - 1);
+
+        _trk_avg_deflection_mean_v.push_back(thetaMean);
+        _trk_avg_deflection_stdev_v.push_back(std::sqrt(variance));
+      }
     }
     else
     {
@@ -536,6 +700,7 @@ void TrackAnalysis::fillDefault()
 
   _trk_bragg_p_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mu_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_pion_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mip_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chipr_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chika_v.push_back(std::numeric_limits<float>::lowest());
@@ -545,6 +710,7 @@ void TrackAnalysis::fillDefault()
 
   _trk_bragg_p_u_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mu_u_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_pion_u_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mip_u_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chipr_u_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chika_u_v.push_back(std::numeric_limits<float>::lowest());
@@ -554,6 +720,7 @@ void TrackAnalysis::fillDefault()
 
   _trk_bragg_p_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mu_v_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_pion_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mip_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chipr_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chika_v_v.push_back(std::numeric_limits<float>::lowest());
@@ -574,12 +741,24 @@ void TrackAnalysis::fillDefault()
   _trk_llr_pid_y_v.push_back(std::numeric_limits<float>::lowest());
   _trk_llr_pid_v.push_back(std::numeric_limits<float>::lowest());
   _trk_llr_pid_score_v.push_back(std::numeric_limits<float>::lowest());
+
+  _trk_nhits_u_v.push_back(std::numeric_limits<int>::lowest());
+  _trk_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
+  _trk_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
+
+  _trk_trunk_dEdx_u_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_trunk_dEdx_v_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_trunk_dEdx_y_v.push_back(std::numeric_limits<float>::lowest());
+
+  _trk_avg_deflection_mean_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_avg_deflection_stdev_v.push_back(std::numeric_limits<float>::lowest());
 }
 
 void TrackAnalysis::setBranches(TTree *_tree)
 {
   _tree->Branch("trk_bragg_p_v", "std::vector< float >", &_trk_bragg_p_v);
   _tree->Branch("trk_bragg_mu_v", "std::vector< float >", &_trk_bragg_mu_v);
+  _tree->Branch("trk_bragg_pion_v", "std::vector< float >", &_trk_bragg_pion_v);
   _tree->Branch("trk_bragg_mip_v", "std::vector< float >", &_trk_bragg_mip_v);
   _tree->Branch("trk_pida_v", "std::vector< float >", &_trk_pida_v);
   _tree->Branch("trk_pid_chipr_v", "std::vector< float >", &_trk_pid_chipr_v);
@@ -589,6 +768,7 @@ void TrackAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("trk_bragg_p_u_v", "std::vector< float >", &_trk_bragg_p_u_v);
   _tree->Branch("trk_bragg_mu_u_v", "std::vector< float >", &_trk_bragg_mu_u_v);
+  _tree->Branch("trk_bragg_pion_u_v", "std::vector< float >", &_trk_bragg_pion_u_v);
   _tree->Branch("trk_bragg_mip_u_v", "std::vector< float >", &_trk_bragg_mip_u_v);
   _tree->Branch("trk_pida_u_v", "std::vector< float >", &_trk_pida_u_v);
   _tree->Branch("trk_pid_chipr_u_v", "std::vector< float >", &_trk_pid_chipr_u_v);
@@ -598,6 +778,7 @@ void TrackAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("trk_bragg_p_v_v", "std::vector< float >", &_trk_bragg_p_v_v);
   _tree->Branch("trk_bragg_mu_v_v", "std::vector< float >", &_trk_bragg_mu_v_v);
+  _tree->Branch("trk_bragg_pion_v_v", "std::vector< float >", &_trk_bragg_pion_v_v);
   _tree->Branch("trk_bragg_mip_v_v", "std::vector< float >", &_trk_bragg_mip_v_v);
   _tree->Branch("trk_pida_v_v", "std::vector< float >", &_trk_pida_v_v);
   _tree->Branch("trk_pid_chipr_v_v", "std::vector< float >", &_trk_pid_chipr_v_v);
@@ -644,12 +825,24 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_llr_pid_y_v", "std::vector<float>", &_trk_llr_pid_y_v);
   _tree->Branch("trk_llr_pid_v", "std::vector<float>", &_trk_llr_pid_v);
   _tree->Branch("trk_llr_pid_score_v", "std::vector<float>", &_trk_llr_pid_score_v);
+
+  _tree->Branch("trk_nhits_u_v", "std::vector<int>", &_trk_nhits_u_v);
+  _tree->Branch("trk_nhits_v_v", "std::vector<int>", &_trk_nhits_v_v);
+  _tree->Branch("trk_nhits_y_v", "std::vector<int>", &_trk_nhits_y_v);
+
+  _tree->Branch("trk_trunk_dEdx_u_v", "std::vector<float>", &_trk_trunk_dEdx_u_v);
+  _tree->Branch("trk_trunk_dEdx_v_v", "std::vector<float>", &_trk_trunk_dEdx_v_v);
+  _tree->Branch("trk_trunk_dEdx_y_v", "std::vector<float>", &_trk_trunk_dEdx_y_v);
+
+  _tree->Branch("trk_avg_deflection_mean_v", "std::vector<float>", &_trk_avg_deflection_mean_v);
+  _tree->Branch("trk_avg_deflection_stdev_v", "std::vector<float>", &_trk_avg_deflection_stdev_v);
 }
 
 void TrackAnalysis::resetTTree(TTree *_tree)
 {
   _trk_bragg_p_v.clear();
   _trk_bragg_mu_v.clear();
+  _trk_bragg_pion_v.clear();
   _trk_bragg_mip_v.clear();
   _trk_pida_v.clear();
   _trk_pid_chipr_v.clear();
@@ -659,6 +852,7 @@ void TrackAnalysis::resetTTree(TTree *_tree)
 
   _trk_bragg_p_u_v.clear();
   _trk_bragg_mu_u_v.clear();
+  _trk_bragg_pion_u_v.clear();
   _trk_bragg_mip_u_v.clear();
   _trk_pida_u_v.clear();
   _trk_pid_chipr_u_v.clear();
@@ -668,6 +862,7 @@ void TrackAnalysis::resetTTree(TTree *_tree)
 
   _trk_bragg_p_v_v.clear();
   _trk_bragg_mu_v_v.clear();
+  _trk_bragg_pion_v_v.clear();
   _trk_bragg_mip_v_v.clear();
   _trk_pida_v_v.clear();
   _trk_pid_chipr_v_v.clear();
@@ -716,6 +911,17 @@ void TrackAnalysis::resetTTree(TTree *_tree)
   _trk_llr_pid_y_v.clear();
   _trk_llr_pid_v.clear();
   _trk_llr_pid_score_v.clear();
+  
+  _trk_nhits_u_v.clear();
+  _trk_nhits_v_v.clear();
+  _trk_nhits_y_v.clear();
+
+  _trk_trunk_dEdx_u_v.clear();
+  _trk_trunk_dEdx_v_v.clear();
+  _trk_trunk_dEdx_y_v.clear();
+
+  _trk_avg_deflection_mean_v.clear();
+  _trk_avg_deflection_stdev_v.clear();
 }
 
 DEFINE_ART_CLASS_TOOL(TrackAnalysis)
